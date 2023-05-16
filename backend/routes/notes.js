@@ -6,8 +6,8 @@ var fetchuser = require('../middleware/fetchdata');
 
 //ROUTE:1 ==> To create a note
 router.post('/createnote', [
-  body('title').isLength({ min: 3 }),
-  body('description').isLength({ min: 5 }),
+  body('title').isLength({ min: 1 }),
+  body('description').isLength({ min: 1 }),
 ], fetchuser, async (req, res) => {
   const errors = validationResult(req);
 
