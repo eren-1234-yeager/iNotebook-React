@@ -1,42 +1,50 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import NotesContext from './noteContext'
 
 
-const NotesStates=(props)=>{
-    const data=[
-        {
-          "_id": "64620a92913288a79bd99a1c",
-          "user": "645faa77e472cdb755bb7ca5",
-          "title": "admin",
-          "description": "i am admin",
-          "tag": "General",
-          "date": "2023-05-15T10:33:54.323Z",
-          "__v": 0
-        },
-        {
-          "_id": "64620a92913288a79bd99a1f",
-          "user": "645faa77e472cdb755bb7ca5",
-          "title": "admin",
-          "description": "i am admin",
-          "tag": "General",
-          "date": "2023-05-15T10:33:54.773Z",
-          "__v": 0
-        },
-        {
-          "_id": "64620a92913288a79bd99a22",
-          "user": "645faa77e472cdb755bb7ca5",
-          "title": "admin",
-          "description": "i am admin",
-          "tag": "General",
-          "date": "2023-05-15T10:33:54.975Z",
-          "__v": 0
-        },
-      ]
-      const [notes, setNotes] = useState(data)
-    return(
-    <NotesContext.Provider value={{notes,setNotes}}>
-        {props.children}
+const NotesStates = (props) => {
+  const host="http://localhost:3000"
+  const data = []
+  const [notes, setNotes] = useState(data)
+
+  //To fetch all Notes
+  const getNotes=async()=>{
+    let options={
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json',
+        'auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ1ZmFhNzdlNDcyY2RiNzU1YmI3Y2E1In0sImlhdCI6MTY4Mzk5MTE1OX0.3pb_lmlx1svCl1VC8k-632zPwa1YxXkP3WntyKeAnAU'
+      },
+    }
+
+    //Fetching Notes
+    let response= await fetch(`${host}/api/notes/fetchallnotes`,options)
+    let data=await response.json()
+    await setNotes(data)
+  }
+
+  //To add Note
+  const addNote = async (title,description,tag) => {
+    //Options for fetch
+    let options={
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ1ZmFhNzdlNDcyY2RiNzU1YmI3Y2E1In0sImlhdCI6MTY4Mzk5MTE1OX0.3pb_lmlx1svCl1VC8k-632zPwa1YxXkP3WntyKeAnAU'
+      },
+      body:JSON.stringify({title,description,tag})
+    }
+
+    //Adding Notes
+    let response= await fetch(`${host}/api/notes/createnote`,options)
+    let data=await response.json()
+    setNotes(notes.concat(data))
+  }
+
+  return (
+    <NotesContext.Provider value={{ notes, addNote ,getNotes}}>
+      {props.children}
     </NotesContext.Provider>
-    )
+  )
 }
 export default NotesStates;
