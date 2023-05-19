@@ -69,12 +69,12 @@ try{
   //Check whether email exists or not
   let user = await User.findOne({ email:email })
   if (!user) {
-    return res.status(400).json({ error: "Please enter correct credentials!" })
+    return res.status(401).json({ error: "Please enter correct credentials!" })
   }
 
   const passwordCompare= await bcrypt.compare(password,user.password)
   if(!passwordCompare){
-    return res.status(400).json({ error: "Please enter correct credentials!" })
+    return res.status(401).json({ error: "Please enter correct credentials!" })
   }
 
       
